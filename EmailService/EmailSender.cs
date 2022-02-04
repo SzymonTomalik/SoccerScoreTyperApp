@@ -1,5 +1,6 @@
 ﻿using MailKit.Net.Smtp;
 using MimeKit;
+using SSTDataAccessLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,24 @@ namespace EmailService
     {
         private readonly EmailConfiguration _emailConfig;
         public EmailSender(EmailConfiguration emailConfig)
-        { 
-        _emailConfig = emailConfig;
+        {
+            _emailConfig = emailConfig;
         }
-        public void SendEmail(Message message) 
+
+        public string ResetPasswordMessageContent(Typer user, string token, string resetUrl)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"Password reset requested <br> user: {user.Login} <br>");
+            sb.AppendLine($"<a href={resetUrl}>Click here</a> to reset your password. <br>");
+            sb.AppendLine("If you didn't ask to change your password, please ignore this message. <br>");
+            sb.AppendLine( "<br>");
+            sb.AppendLine("<p>SoccerScoreTyper</p>");
+
+            return sb.ToString();
+
+        }
+
+        public void SendEmail(Message message)
         {
             var emailMessage = CreateEmailMessage(message);
             Send(emailMessage);
@@ -54,7 +69,7 @@ namespace EmailService
                 catch
                 {
                     //TODO: log an error message or throw an exception, or both.
-                    throw ;
+                    throw;
                 }
                 finally
                 {
@@ -64,7 +79,7 @@ namespace EmailService
             }
         }
 
-        private async Task SendAsync(MimeMessage mailMessage) 
+        private async Task SendAsync(MimeMessage mailMessage)
         {
             using (var client = new SmtpClient())
             {
@@ -88,6 +103,8 @@ namespace EmailService
                 }
             }
         }
-         
+
+
+
     }
 }

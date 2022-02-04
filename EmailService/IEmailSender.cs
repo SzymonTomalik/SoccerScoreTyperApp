@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SSTDataAccessLibrary.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,5 +11,6 @@ namespace EmailService
     {
         void SendEmail(Message message);
         Task SendEmailAsync(Message message);
+        string ResetPasswordMessageContent(Typer typer, string body, string resetUrl);
     }
 }

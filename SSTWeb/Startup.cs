@@ -34,7 +34,6 @@ namespace SSTWeb
                 .GetSection("EmailConfiguration")
                 .Get<EmailConfiguration>();
             services.AddSingleton(emailConfig);
-
             services.AddScoped<IEmailSender, EmailSender>();
 
             services.AddDbContext<SSTContext>(options =>
@@ -46,7 +45,12 @@ namespace SSTWeb
 
                 opt.User.RequireUniqueEmail = true;
             })
-                .AddEntityFrameworkStores<SSTContext>();
+                .AddEntityFrameworkStores<SSTContext>()
+                 .AddDefaultTokenProviders();
+
+            services.Configure<DataProtectionTokenProviderOptions>(opt =>
+                opt.TokenLifespan = TimeSpan.FromMinutes(30));
+
             services.AddScoped<IUserClaimsPrincipalFactory<Typer>, CustomClaimsFactory>();
 
 
