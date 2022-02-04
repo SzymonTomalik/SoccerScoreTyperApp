@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SSTWeb.Models;
 using System;
@@ -24,6 +25,11 @@ namespace SSTWeb.Controllers
         }
 
         public IActionResult Privacy()
+        {
+            return View();
+        }
+        [Authorize]
+        public IActionResult MainPage()
         {
             return View();
         }

@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SSTDataAccessLibrary.DataAccess;
 using SSTDataAccessLibrary.Models;
+using SSTWeb.Factory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +39,8 @@ namespace SSTWeb
                 opt.User.RequireUniqueEmail = true;
             })
                 .AddEntityFrameworkStores<SSTContext>();
+            services.AddScoped<IUserClaimsPrincipalFactory<Typer>, CustomClaimsFactory>();
+
 
             services.AddAutoMapper(typeof(Startup));
 
@@ -63,6 +66,7 @@ namespace SSTWeb
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
