@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SSTDataAccessLibrary.DataAccess;
 
@@ -11,9 +12,10 @@ using SSTDataAccessLibrary.DataAccess;
 namespace SSTDataAccessLibrary.Migrations
 {
     [DbContext(typeof(SSTContext))]
-    partial class SSTContextModelSnapshot : ModelSnapshot
+    [Migration("20220123213632_InsertedRoles")]
+    partial class InsertedRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,15 +53,15 @@ namespace SSTDataAccessLibrary.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "62ecf49c-821e-42c8-8d18-903fa2df01e5",
-                            ConcurrencyStamp = "8c5a289f-d439-4247-b0c7-2dd987ae5f87",
+                            Id = "c0cb73f6-db05-4686-a3f3-5386a2ebfed7",
+                            ConcurrencyStamp = "739bbfe1-0000-4c6a-b7ab-8ea817622eea",
                             Name = "Visitor",
                             NormalizedName = "VISITOR"
                         },
                         new
                         {
-                            Id = "93cfc212-21ec-41c7-8d77-a4e78eee82ee",
-                            ConcurrencyStamp = "52bc4726-e9cc-4f1f-b974-1ec2f7fa75bd",
+                            Id = "76ac0cfd-dbe0-4f9d-b202-7c486813cfd9",
+                            ConcurrencyStamp = "f62a628c-5377-4d32-bd1d-09051ea29a41",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -392,22 +394,26 @@ namespace SSTDataAccessLibrary.Migrations
                         .HasMaxLength(40)
                         .HasColumnType("nvarchar(40)");
 
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.HasDiscriminator().HasValue("Typer");
 
                     b.HasData(
                         new
                         {
-                            Id = "79adb8ac-a602-43ff-b374-dac054262929",
+                            Id = "76deb241-8e3d-45d1-a467-445a9555292f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e766da3e-caea-4107-8cba-fdda98b02852",
-                            Email = "newuser@newuser.com",
+                            ConcurrencyStamp = "ceb0a897-e1ce-441c-80f4-648353495720",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "67b6ddb1-5577-4dfd-abb7-7a5137351678",
+                            SecurityStamp = "b31280ae-58eb-457b-990d-c5182e2510f6",
                             TwoFactorEnabled = false,
-                            UserName = "OLDOLD",
-                            Login = "aaaa"
+                            Login = "New User",
+                            Password = "newuser"
                         });
                 });
 

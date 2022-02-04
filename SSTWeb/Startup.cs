@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SSTDataAccessLibrary.DataAccess;
+using SSTDataAccessLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,10 +29,20 @@ namespace SSTWeb
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<SSTContext>(options =>
-               {
-                   options.UseSqlServer(Configuration.GetConnectionString("SSTDB"));
-               });
-            services.AddRazorPages();
+                                  options.UseSqlServer(Configuration.GetConnectionString("SSTDB")));
+
+            services.AddIdentity<Typer, IdentityRole>(opt =>
+            {
+                opt.Password.RequiredLength = 8;
+               
+                opt.User.RequireUniqueEmail = true;
+            })
+                .AddEntityFrameworkStores<SSTContext>();
+
+            services.AddAutoMapper(typeof(Startup));
+
+            services.AddControllersWithViews();
+            //services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
