@@ -17,6 +17,17 @@ namespace EmailService
             _emailConfig = emailConfig;
         }
 
+        public string UnlockAccountMessageContent(string login, string forgotPassLink)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"Hi {login}! <br>");
+            sb.AppendLine($"Unfortunately your account is locked out, to reset your password, please <a href = {forgotPassLink}>click this link<a/>. <br>");
+            sb.AppendLine("<br>");
+            sb.AppendLine("<p>SoccerScoreTyper</p>");
+
+            return sb.ToString();
+        }
+
         public string ConfirmEmailMessageContent(string login, string confirmationLink)
         {
             StringBuilder sb = new StringBuilder();
@@ -24,7 +35,7 @@ namespace EmailService
             sb.AppendLine("Welcome to SoccerScoreTyper! We're excited you're joining us. <br>");
             sb.AppendLine("Ready to get started? First, verify your email address: <br>");
             sb.AppendLine($"<a href={confirmationLink}>Click here</a><br>");
-            //sb.AppendLine("Link will be active for 30 minutes <br>");
+            sb.AppendLine("Link will be active for 3 days.<br>");
             sb.AppendLine("If you have not registered on SoccerScoreTyper, please ignore this message. <br>");
             sb.AppendLine("But feel free to join our community of typers with your friends! <br>");
             sb.AppendLine("<br>");
@@ -119,8 +130,5 @@ namespace EmailService
                 }
             }
         }
-
-
-
     }
 }

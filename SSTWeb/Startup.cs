@@ -46,6 +46,9 @@ namespace SSTWeb
                 opt.User.RequireUniqueEmail = true;
                 opt.SignIn.RequireConfirmedEmail = true;
                 opt.Tokens.EmailConfirmationTokenProvider = "emailconfirmation";
+                opt.Lockout.AllowedForNewUsers = true;
+                opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+                opt.Lockout.MaxFailedAccessAttempts = 3;
 
             })
                 .AddEntityFrameworkStores<SSTContext>()

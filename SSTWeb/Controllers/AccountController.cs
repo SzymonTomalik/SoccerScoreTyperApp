@@ -54,8 +54,8 @@ namespace SSTWeb.Controllers
             }
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account", new { token, email = user.Email }, Request.Scheme);
-            var callback = _emailSender.ConfirmEmailMessageContent(user.Login, confirmationLink);
-            var message = new Message(new string[] { user.Email }, "Confirmation email link", callback);
+            var content = _emailSender.ConfirmEmailMessageContent(user.Login, confirmationLink);
+            var message = new Message(new string[] { user.Email }, "Confirmation email link", content);
             await _emailSender.SendEmailAsync(message);
 
             await _userManager.AddToRoleAsync(user, "Visitor");
@@ -96,7 +96,7 @@ namespace SSTWeb.Controllers
                 return View(userModel);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(userModel.UserName, userModel.Password, userModel.RememberMe, false);
+            var result = await _signInManager.PasswordSignInAsync(userModel.UserName, userModel.Password, userModel.RememberMe, lockoutOnFailure: true);
 
             var user = await _userManager.FindByNameAsync(userModel.UserName);
             if (user == null)
@@ -107,9 +107,20 @@ namespace SSTWeb.Controllers
                
             bool confirmed = await _userManager.IsEmailConfirmedAsync(user);
 
-            if (result.Succeeded && confirmed == true)
+            if (result.Succeeded && confirmed == true && !result.IsLockedOut)
             {
                 return RedirectToLocal(returnUrl);
+            }
+
+            if (result.IsLockedOut)
+            {
+                var forgotPassLink = Url.Action(nameof(ForgotPassword), "Account", new { }, Request.Scheme);
+                var content = _emailSender.UnlockAccountMessageContent(user.Login, forgotPassLink);
+                var message = new Message(new string[] { user.Email }, "Locked out account information", content);
+                await _emailSender.SendEmailAsync(message);
+
+                ModelState.AddModelError("", "The account is locked out");
+                return View();
             }
             else
             {
@@ -153,8 +164,8 @@ namespace SSTWeb.Controllers
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var resetUrl = Url.Action(nameof(ResetPassword), "Account", new { token, email = user.Email }, Request.Scheme);
-            var callback = _emailSender.ResetPasswordMessageContent(user.Login, resetUrl);
-            var message = new Message(new string[] { user.Email }, "Reset password token", callback);
+            var content = _emailSender.ResetPasswordMessageContent(user.Login, resetUrl);
+            var message = new Message(new string[] { user.Email }, "Reset password token", content);
             await _emailSender.SendEmailAsync(message);
 
             return RedirectToAction(nameof(ForgotPasswordConfirmation));

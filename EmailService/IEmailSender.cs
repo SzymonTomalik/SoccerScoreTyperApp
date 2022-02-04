@@ -13,5 +13,6 @@ namespace EmailService
         Task SendEmailAsync(Message message);
         string ResetPasswordMessageContent(string login, string resetUrl);
         string ConfirmEmailMessageContent(string login, string confirmationLink);
+        string UnlockAccountMessageContent(string login, string forgotPassLink);
     }
 }
