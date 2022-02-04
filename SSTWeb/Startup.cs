@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using SSTDataAccessLibrary.DataAccess;
 using SSTDataAccessLibrary.Models;
 using SSTWeb.CustomTokenProviders;
+using SSTWeb.CustomValidators;
 using SSTWeb.Factory;
 using System;
 using System.Collections.Generic;
@@ -53,7 +54,9 @@ namespace SSTWeb
             })
                 .AddEntityFrameworkStores<SSTContext>()
                 .AddDefaultTokenProviders()
-                .AddTokenProvider<EmailConfirmationTokenProvider<Typer>>("emailconfirmation");
+                .AddTokenProvider<EmailConfirmationTokenProvider<Typer>>("emailconfirmation")
+                .AddPasswordValidator<CustomPasswordValidator<Typer>>();
+
 
             services.Configure<DataProtectionTokenProviderOptions>(opt =>
                 opt.TokenLifespan = TimeSpan.FromMinutes(30));
