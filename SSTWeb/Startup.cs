@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SSTDataAccessLibrary.DataAccess;
 using SSTDataAccessLibrary.Models;
+using SSTWeb.CustomTokenProviders;
 using SSTWeb.Factory;
 using System;
 using System.Collections.Generic;
@@ -42,14 +43,19 @@ namespace SSTWeb
             services.AddIdentity<Typer, IdentityRole>(opt =>
             {
                 opt.Password.RequiredLength = 8;
-
                 opt.User.RequireUniqueEmail = true;
+                opt.SignIn.RequireConfirmedEmail = true;
+                opt.Tokens.EmailConfirmationTokenProvider = "emailconfirmation";
+
             })
                 .AddEntityFrameworkStores<SSTContext>()
-                 .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddTokenProvider<EmailConfirmationTokenProvider<Typer>>("emailconfirmation");
 
             services.Configure<DataProtectionTokenProviderOptions>(opt =>
                 opt.TokenLifespan = TimeSpan.FromMinutes(30));
+            services.Configure<EmailConfirmationTokenProviderOptions>(opt =>
+                opt.TokenLifespan = TimeSpan.FromDays(3));
 
             services.AddScoped<IUserClaimsPrincipalFactory<Typer>, CustomClaimsFactory>();
 

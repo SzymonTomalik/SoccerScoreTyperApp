@@ -17,7 +17,23 @@ namespace EmailService
             _emailConfig = emailConfig;
         }
 
-        public string ResetPasswordMessageContent(string login, string token, string resetUrl)
+        public string ConfirmEmailMessageContent(string login, string confirmationLink)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"Hi {login}! <br>");
+            sb.AppendLine("Welcome to SoccerScoreTyper! We're excited you're joining us. <br>");
+            sb.AppendLine("Ready to get started? First, verify your email address: <br>");
+            sb.AppendLine($"<a href={confirmationLink}>Click here</a><br>");
+            //sb.AppendLine("Link will be active for 30 minutes <br>");
+            sb.AppendLine("If you have not registered on SoccerScoreTyper, please ignore this message. <br>");
+            sb.AppendLine("But feel free to join our community of typers with your friends! <br>");
+            sb.AppendLine("<br>");
+            sb.AppendLine("<p>SoccerScoreTyper</p>");
+
+            return sb.ToString();
+        }
+
+        public string ResetPasswordMessageContent(string login, string resetUrl)
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"Password reset requested <br> user: {login} <br>");
@@ -28,7 +44,6 @@ namespace EmailService
             sb.AppendLine("<p>SoccerScoreTyper</p>");
 
             return sb.ToString();
-
         }
 
         public void SendEmail(Message message)

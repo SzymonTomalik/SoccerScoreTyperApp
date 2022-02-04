@@ -52,10 +52,32 @@ namespace SSTWeb.Controllers
 
                 return View(userModel);
             }
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account", new { token, email = user.Email }, Request.Scheme);
+            var callback = _emailSender.ConfirmEmailMessageContent(user.Login, confirmationLink);
+            var message = new Message(new string[] { user.Email }, "Confirmation email link", callback);
+            await _emailSender.SendEmailAsync(message);
 
             await _userManager.AddToRoleAsync(user, "Visitor");
 
-            return RedirectToAction(nameof(HomeController.Index), "Home");
+            return RedirectToAction(nameof(SuccessRegistration));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string token, string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return View("Error");
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            return View(result.Succeeded ? nameof(ConfirmEmail) : "Error");
+        }
+
+        [HttpGet]
+        public IActionResult SuccessRegistration()
+        {
+            return View();
         }
 
         [HttpGet]
@@ -75,13 +97,23 @@ namespace SSTWeb.Controllers
             }
 
             var result = await _signInManager.PasswordSignInAsync(userModel.UserName, userModel.Password, userModel.RememberMe, false);
-            if (result.Succeeded)
+
+            var user = await _userManager.FindByNameAsync(userModel.UserName);
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Invalid Login Attempt. Incorrect Login, Password or Unconfirmed Email");
+                return View();
+            }
+               
+            bool confirmed = await _userManager.IsEmailConfirmedAsync(user);
+
+            if (result.Succeeded && confirmed == true)
             {
                 return RedirectToLocal(returnUrl);
             }
             else
             {
-                ModelState.AddModelError("", "Invalid UserName or Password");
+                ModelState.AddModelError("", "Invalid Login Attempt. Incorrect Login, Password or Unconfirmed Email");
                 return View();
             }
         }
@@ -121,13 +153,13 @@ namespace SSTWeb.Controllers
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var resetUrl = Url.Action(nameof(ResetPassword), "Account", new { token, email = user.Email }, Request.Scheme);
-            var callback = _emailSender.ResetPasswordMessageContent(user.Login, token, resetUrl);
+            var callback = _emailSender.ResetPasswordMessageContent(user.Login, resetUrl);
             var message = new Message(new string[] { user.Email }, "Reset password token", callback);
             await _emailSender.SendEmailAsync(message);
 
             return RedirectToAction(nameof(ForgotPasswordConfirmation));
         }
-              
+
 
         public IActionResult ForgotPasswordConfirmation()
         {
@@ -164,6 +196,12 @@ namespace SSTWeb.Controllers
 
         [HttpGet]
         public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
+        }
+        
+        [HttpGet]
+        public IActionResult Error()
         {
             return View();
         }

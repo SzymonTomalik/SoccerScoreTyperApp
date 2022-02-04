@@ -11,6 +11,7 @@ namespace EmailService
     {
         void SendEmail(Message message);
         Task SendEmailAsync(Message message);
-        string ResetPasswordMessageContent(string login, string body, string resetUrl);
+        string ResetPasswordMessageContent(string login, string resetUrl);
+        string ConfirmEmailMessageContent(string login, string confirmationLink);
     }
 }
