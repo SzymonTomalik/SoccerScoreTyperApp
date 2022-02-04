@@ -121,7 +121,7 @@ namespace SSTWeb.Controllers
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var resetUrl = Url.Action(nameof(ResetPassword), "Account", new { token, email = user.Email }, Request.Scheme);
-            var callback = _emailSender.ResetPasswordMessageContent(user, token, resetUrl);
+            var callback = _emailSender.ResetPasswordMessageContent(user.Login, token, resetUrl);
             var message = new Message(new string[] { user.Email }, "Reset password token", callback);
             await _emailSender.SendEmailAsync(message);
 

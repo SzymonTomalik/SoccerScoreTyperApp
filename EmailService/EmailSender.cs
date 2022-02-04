@@ -17,11 +17,12 @@ namespace EmailService
             _emailConfig = emailConfig;
         }
 
-        public string ResetPasswordMessageContent(Typer user, string token, string resetUrl)
+        public string ResetPasswordMessageContent(string login, string token, string resetUrl)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"Password reset requested <br> user: {user.Login} <br>");
+            sb.AppendLine($"Password reset requested <br> user: {login} <br>");
             sb.AppendLine($"<a href={resetUrl}>Click here</a> to reset your password. <br>");
+            sb.AppendLine("Link will be active for 30 minutes <br>");
             sb.AppendLine("If you didn't ask to change your password, please ignore this message. <br>");
             sb.AppendLine( "<br>");
             sb.AppendLine("<p>SoccerScoreTyper</p>");
