@@ -8,8 +8,9 @@ namespace SSTWeb
         public MappingProfile()
         {
             CreateMap<Models.UserRegistrationModel, Typer>()
-                            .ForMember(u => u.UserName, opt => opt.MapFrom(x => x.Login))
-            ;
+                            .ForMember(u => u.UserName, opt => opt.MapFrom(x => x.Login));
+            CreateMap<Models.ExternalLoginModel, Typer>()
+                            .ForMember(u => u.Login, opt => opt.MapFrom(x => x.UserName));
         }
     }
 }

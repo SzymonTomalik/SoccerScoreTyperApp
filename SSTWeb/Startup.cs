@@ -57,6 +57,22 @@ namespace SSTWeb
                 .AddTokenProvider<EmailConfirmationTokenProvider<Typer>>("emailconfirmation")
                 .AddPasswordValidator<CustomPasswordValidator<Typer>>();
 
+            services.AddAuthentication()
+                .AddGoogle("Google", opt=>
+                {
+                    var googleAuth = Configuration.GetSection("Authentication:Google");
+                    opt.ClientId = googleAuth["ClientId"];
+                    opt.ClientSecret = googleAuth["ClientSecret"];
+                    opt.SignInScheme = IdentityConstants.ExternalScheme;
+                })
+                .AddFacebook(opt =>
+                {
+                    var facebookAuth = Configuration.GetSection("Authentication:Facebook");
+                    opt.AppId = facebookAuth["AppId"];
+                    opt.AppSecret = facebookAuth["AppSecret"];
+                    opt.SignInScheme = IdentityConstants.ExternalScheme;
+                });
+
 
             services.Configure<DataProtectionTokenProviderOptions>(opt =>
                 opt.TokenLifespan = TimeSpan.FromMinutes(30));
