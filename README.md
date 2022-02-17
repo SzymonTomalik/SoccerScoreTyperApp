@@ -10,7 +10,8 @@ Technologies and frameworks used:
 - ASP.NET Core Identity
 - Azure MsSQLServer :cloud:
 - VisualStudio2022 :computer:
-- The application will be available on the Azure platform in the future
+- The application will be available on the Azure platform https://soccerscoretyper.azurewebsites.net/
+
 <br>
 
   Currently in the application is possible to:
