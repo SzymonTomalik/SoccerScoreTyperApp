@@ -29,7 +29,6 @@ namespace SSTWeb
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             var emailConfig = Configuration
@@ -64,6 +63,7 @@ namespace SSTWeb
                     opt.ClientId = googleAuth["ClientId"];
                     opt.ClientSecret = googleAuth["ClientSecret"];
                     opt.SignInScheme = IdentityConstants.ExternalScheme;
+                    
                 })
                 .AddFacebook(opt =>
                 {
@@ -85,10 +85,8 @@ namespace SSTWeb
             services.AddAutoMapper(typeof(Startup));
 
             services.AddControllersWithViews();
-            //services.AddRazorPages();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -98,7 +96,6 @@ namespace SSTWeb
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
